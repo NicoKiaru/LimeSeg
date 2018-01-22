@@ -1,0 +1,56 @@
+#define PRECISION 0.001
+uniform mat4 mvp;
+uniform mat4 matrix_inverse_transpose;
+uniform vec3 lightDir;
+uniform float ptThickness;
+uniform float zMin;
+uniform float zMax;
+uniform float zSliceMin;
+uniform float zSliceMax;
+//attribute highp vec4 position;
+//attribute highp vec3 normal;
+//attribute highp vec4 color;
+//varying highp vec4 particleColor;
+attribute vec4 position;
+attribute vec3 normal;
+attribute vec4 color;
+varying vec4 particleColor;
+varying vec2 u;
+varying vec2 v;
+void main()
+{   
+    vec3 n = normalize(vec3(matrix_inverse_transpose * vec4(normal, 0.0)));
+    //float lengthN = length(vec3(mvp * vec4(normal, 0.0)));
+
+    //normalize(mat3(mvp) * normal);
+    n.y=-n.y;
+    	
+   	float norm2xy = dot(n.xy,n.xy);
+   	float normxy = sqrt(norm2xy);
+    	
+    v.x=n.y;
+    v.y=-n.x;
+    v = v/normxy;
+    if (norm2xy>(1.0-PRECISION)) norm2xy=1.0-PRECISION;
+    float oneovernorm2nxy = sqrt(1-norm2xy); 
+		    
+    float uL = 1/oneovernorm2nxy; 
+			    
+    u=n.xy/normxy;
+    u = uL * u;
+
+    n.y=-n.y;
+    float intensity = max(0.25,abs(dot (n, lightDir)));
+    if ((position.z<zSliceMax)&&(position.z>zSliceMin)) {
+        intensity*=0.5;
+    }
+
+    gl_Position = mvp * position;
+    if ((position.z>zMax)||(position.z<zMin)) {
+        gl_PointSize = 0;
+    } else {
+        gl_PointSize = ptThickness/gl_Position.z;  
+    }
+    if (gl_PointSize>100) {gl_PointSize=0;}
+    particleColor = color*intensity;
+}

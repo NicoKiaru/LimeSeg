@@ -1,0 +1,28 @@
+uniform mat4 mvp;
+uniform vec3 lightDir;
+uniform float zMin;
+uniform float zMax;
+uniform float zSliceMin;
+uniform float zSliceMax;
+//attribute highp vec4 position;
+//attribute highp vec3 normal;
+//attribute highp vec4 color;
+//varying highp vec4 particleColor;
+
+attribute vec4 position;
+attribute vec3 normal;
+attribute vec4 color;
+varying vec4 particleColor;
+
+varying float zPosFrag;
+void main()
+{   
+    vec3 n = normalize(mat3(mvp) * normal);
+    float intensity = max(0.25,abs(dot (n, lightDir)));
+    //if ((position.z<zSliceMax)&&(position.z>zSliceMin)) {
+    //    intensity*=0.5;
+    //}
+    zPosFrag=position.z;
+    gl_Position = mvp * position;
+    particleColor = color*intensity;
+}
