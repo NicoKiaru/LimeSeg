@@ -86,14 +86,16 @@ LimeSeg.currentFrame=1; // needs to be modified to work on a different timepoint
 for (Cell c:LimeSeg.allCells) {
 	LimeSeg.currentCell=c;
 	LimeSeg.constructMesh(); // reconstruct mesh
-	if (java.lang.Math.random()<0.5) {
-		LimeSeg.setCell3DDisplayMode(1); // displays Mesh randomly
-	} else {
-		LimeSeg.setCell3DDisplayMode(0); // displays Mesh randomly
-	}
+	
 }
 
+LimeSeg.clear3DDisplay();
 
+for (Cell c:LimeSeg.allCells) {
+	LimeSeg.setCell3DDisplayMode(1); // displays Mesh instead of dots 
+}
+
+LimeSeg.putAllCellsTo3DDisplay();
 
 // LimeSeg cellT points manipulation
 // For instance due to the methods, there is some space between surface, let's make this less obvious:
