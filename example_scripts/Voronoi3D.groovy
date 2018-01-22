@@ -92,6 +92,7 @@ for (Cell c:LimeSeg.allCells) {
 LimeSeg.clear3DDisplay();
 
 for (Cell c:LimeSeg.allCells) {
+	LimeSeg.currentCell=c;
 	LimeSeg.setCell3DDisplayMode(1); // displays Mesh instead of dots 
 }
 
