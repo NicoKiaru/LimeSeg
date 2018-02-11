@@ -154,8 +154,7 @@
 			<groupId>org.scijava</groupId>
 			<artifactId>j3dutils</artifactId>
 		</dependency>
-	</dependencies>
-	
+	</dependencies>	
 
 	<description>Lipid Membrane Segmentation method for ImageJ. To be published...</description>
 </project>
