@@ -119,6 +119,7 @@ public class SphereSegAdvanced implements Command {
         float avgZ=0;
         int NCells=0;
         ArrayList<CellT> currentlyOptimizedCellTs = new ArrayList<>();
+        LimeSeg.currentChannel = imp.getChannel();
         if (sameCell) {
         	LimeSeg.newCell();
         }
@@ -127,7 +128,7 @@ public class SphereSegAdvanced implements Command {
 			if (roi.getClass().equals(OvalRoi.class)) {
 				OvalRoi circle = (OvalRoi) roi;
 				float r0 = (float) ((circle.getFloatWidth()/2 + circle.getFloatHeight()/2)/2);
-				LimeSeg.currentChannel = circle.getCPosition();
+				//LimeSeg.currentChannel = circle.getCPosition();
 				LimeSeg.currentFrame = circle.getTPosition();
 				if (LimeSeg.currentFrame==0) {LimeSeg.currentFrame=1;}
 				float z0 = circle.getZPosition();

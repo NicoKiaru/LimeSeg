@@ -84,13 +84,14 @@ public class SkeletonSeg implements Command{
         float avgZ=0;
         int NRois=0;
         LimeSeg.newSkeleton();
+        LimeSeg.currentChannel = imp.getChannel();
 		for (Roi roi:roiManager.getRoisAsArray()) {
 			LimeSeg.addRoiToSkeleton(roi,roi.getZPosition());	
 			avgZ+=roi.getZPosition();
 			avgX+=roi.getXBase();
 			avgY+=roi.getYBase();
 			LimeSeg.currentFrame = roi.getTPosition();
-			LimeSeg.currentChannel = roi.getCPosition();
+			//LimeSeg.currentChannel = roi.getCPosition();
 			if (LimeSeg.currentFrame==0) {LimeSeg.currentFrame=1;}
 			NRois++;
 		}
