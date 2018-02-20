@@ -1,3 +1,5 @@
+[![](https://travis-ci.org/NicoKiaru/LimeSeg.svg?branch=master)](https://travis-ci.org/NicoKiaru/LimeSeg)
+
 LimeSeg
 =========
 
