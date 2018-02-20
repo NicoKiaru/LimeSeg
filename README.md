@@ -9,9 +9,13 @@ Documentation
 ------------------------
 For the documentation, go to http://imagej.net/LimeSeg/.
 
+
+
 Citation
 --------
-LimeSeg is available through Fiji, and is based on a publication. If you use it successfully for your research please be so kind to cite our work... [publication coming soon].
+LimeSeg is available through Fiji, and is based on a publication. If you use it successfully for your research please be so kind to cite our work (https://doi.org/10.1101/267534).
+
+
 
 
 
