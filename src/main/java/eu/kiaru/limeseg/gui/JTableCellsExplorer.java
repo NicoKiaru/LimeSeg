@@ -28,7 +28,7 @@ import eu.kiaru.limeseg.struct.CellT;
 
 /**
  * Tab containing infos about cells contained in LimeSeg
- *  -> Not completely stable
+ *  - Not completely stable
  * @author Nicolas Chiaruttini
  */
 public class JTableCellsExplorer extends javax.swing.JFrame {

@@ -68,7 +68,6 @@ public class CellT implements Cloneable{
     /**
      * Constructor of a cell timepoint
      * @param c_in Cell to which this cell timepoint is attached
-     * @param channel_in Channel attached to this cell timepoint
      * @param frame_in Frame number (IJ1 convention) to which this cell timpeoint is attached
      */
     public CellT(Cell c_in, int frame_in) {

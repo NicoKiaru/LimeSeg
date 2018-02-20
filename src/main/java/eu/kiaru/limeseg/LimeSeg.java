@@ -398,9 +398,9 @@ public class LimeSeg implements Command {
     /**
      * Sets image to be used by the optimizer using ImagePlus IJ1 reference
      * Can affect to currentframe and currentchannel synchronization
-     * @param imageID
-     * @param channel
-     * @param frame
+     * @param img The image (ImagePlus) on which the optimisation will be run
+     * @param channel Channel chosen (IJ1 notation)
+     * @param frame Frame chosen (IJ1 notation)
      */
     static public void setWorkingImage(ImagePlus img, int channel, int frame) {        
         opt.setWorkingImage(img, channel, frame);  
@@ -410,9 +410,9 @@ public class LimeSeg implements Command {
     /**
      * Sets image to be used by the optimizer using RandomAccessibleInterval ImgLib2 Object
      * Can affect to currentframe and currentchannel synchronization
-     * @param imageID
-     * @param channel
-     * @param frame
+     * @param img RandomAccessibleInterval chosen for segmentation (5D)
+     * @param channel Channel chosen
+     * @param frame Frame chosen
      */
     static public void setWorkingImage(RandomAccessibleInterval img, int channel, int frame) {        
         if (!optimizerIsRunning) {
@@ -612,7 +612,7 @@ public class LimeSeg implements Command {
      *  		(0; [-0.04...0.04])
      * 	- "ka": 
      * 			amplitude of attractive force between surfels pair 
-     * 			(when d>d_0)
+     * 			(when d above d_0)
      * 			(0.01)
      *  - "pa": 
      *  		power of attractive force 
@@ -1392,7 +1392,7 @@ public class LimeSeg implements Command {
         }		
 	}
 	/**
-	 * Set current dot flag -> can then use removedflaggeddots to remove them
+	 * Set current dot flag. removedflaggeddots can then be used to remove them
 	 * @param flag
 	 */
 	@IJ1ScriptableMethod(target=CURRENT_DOT, ui="STD", tt="(int flag)", pr=4)
