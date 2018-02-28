@@ -10,6 +10,7 @@ import ij.plugin.frame.RoiManager;
 /**
  * Resumes a segmentation started within the optimizer
  * @author Nicolas Chiaruttini
+ * 
  */
 @Plugin(type = Command.class, menuPath = "Plugins>LimeSeg>Resume Seg")
 public class ResumeSegmentation implements Command {
