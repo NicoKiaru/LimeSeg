@@ -2,27 +2,14 @@ package eu.kiaru.limeseg.commands;
 
 
 import org.scijava.command.Command;
-import org.scijava.io.DefaultIOService;
-import org.scijava.io.IOService;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
-import org.scijava.service.ServiceHelper;
 import org.scijava.util.ColorRGB;
 
 import eu.kiaru.limeseg.LimeSeg;
-import eu.kiaru.limeseg.demos.DemoHelper;
-import eu.kiaru.limeseg.struct.CellT;
 import ij.ImagePlus;
-import ij.gui.OvalRoi;
 import ij.gui.Roi;
-import ij.measure.ResultsTable;
-import ij.plugin.filter.Analyzer;
 import ij.plugin.frame.RoiManager;
-import net.imagej.Dataset;
-import net.imagej.ImageJ;
-import net.imagej.display.ImageDisplay;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.display.imagej.ImageJFunctions;
 /**
  * Starts a segmentation from a skeleton:
  * 	- a skeleton is a list of roi, stored within the ROIManager.
@@ -91,7 +78,6 @@ public class SkeletonSeg implements Command{
 			avgX+=roi.getXBase();
 			avgY+=roi.getYBase();
 			LimeSeg.currentFrame = roi.getTPosition();
-			//LimeSeg.currentChannel = roi.getCPosition();
 			if (LimeSeg.currentFrame==0) {LimeSeg.currentFrame=1;}
 			NRois++;
 		}
@@ -116,7 +102,6 @@ public class SkeletonSeg implements Command{
     		LimeSeg.make3DViewVisible();
     		LimeSeg.putAllCellsTo3DDisplay();
     		LimeSeg.set3DViewCenter(avgX/NRois,avgY/NRois,avgZ/NRois);
-    		//LimeSeg.jcr.setViewMode(8);
     	}
     	
  	    float k_grad=(float) LimeSeg.opt.getOptParam("k_grad");
@@ -147,37 +132,11 @@ public class SkeletonSeg implements Command{
        	   	LimeSeg.putCurrentCellToOverlay();       	        	
        	  	LimeSeg.updateOverlay();
        	}	
-      	if (appendMeasures) {
-       		//
-       		ResultsTable rt = Analyzer.getResultsTable();
-       	 
-       		if (rt == null) {
-       		        rt = new ResultsTable();
-       		        Analyzer.setResultsTable(rt);
-       		}
-       		CellT ct = LimeSeg.currentCell.getCellTAt(LimeSeg.currentFrame);
-       		{
-       		    rt.incrementCounter();
-       		    int i = rt.getLastColumn()+1;
-       			ct.updateCenter();
-       		    rt.addValue("Cell Name", ct.c.id_Cell);
-       			rt.addValue("Number of Surfels", ct.dots.size());
-       			rt.addValue("Center X", ct.center.x);
-       			rt.addValue("Center Y", ct.center.y);
-       			rt.addValue("Center Z", ct.center.z);
-       			rt.addValue("Frame", ct.frame);
-       			rt.addValue("Channel", ct.c.cellChannel);       			
-       			rt.addValue("Mesh ?", (constructMesh)?"YES":"NO");
-       			if (constructMesh) {
-       				rt.addValue("Euler characteristic", ct.dots.size()-3.0/2.0*ct.triangles.size()+ct.triangles.size());
-       				rt.addValue("Free edges", ct.freeEdges);
-       				rt.addValue("Surface", ct.getSurface());
-       				rt.addValue("Volume", ct.getVolume());
-       				rt.addValue("Real Surface", ct.getSurface()*(this.realXYPixelSize*this.realXYPixelSize));
-       				rt.addValue("Real Volume", ct.getVolume()*(this.realXYPixelSize*this.realXYPixelSize*this.realXYPixelSize));
-       			}
-       		}       		
-       		rt.show("Results");
+       	
+    	if (appendMeasures) {
+       		CommandHelper.displaySegmentationOutput(LimeSeg.opt.cellTInOptimizer, 
+       												this.realXYPixelSize, 
+       												this.constructMesh);
        	}
 	}
 }

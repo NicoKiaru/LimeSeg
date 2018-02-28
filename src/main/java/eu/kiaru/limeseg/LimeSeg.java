@@ -1767,10 +1767,10 @@ public class LimeSeg implements Command {
 	 * C Elegans segmentation benchmark
 	 * !! Takes a huge amount of time to unzip data
 	 */
-	@IJ1ScriptableMethod(target=BENCHMARK, ui="STD", newThread=true) 
+	/*@IJ1ScriptableMethod(target=BENCHMARK, ui="STD", newThread=true) 
 	static public void benchCElegans() {			
 		SegCElegans.TestSegEmbryoCElegansFull();			
-	}
+	}*/
 
     static public String handleExtension(String name, Object[] args) {  
     	HandleIJ1Extension.staticHandleExtension(name, args);

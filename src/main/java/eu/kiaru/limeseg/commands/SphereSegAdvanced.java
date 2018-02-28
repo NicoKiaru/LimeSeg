@@ -63,7 +63,7 @@ public class SphereSegAdvanced implements Command {
     boolean show3D;
     
     @Parameter(persist=true)
-    boolean constructMesh;
+    boolean constructMesh=true;
     
     @Parameter(persist=true)
     int numberOfIntegrationStep=-1;
@@ -76,9 +76,6 @@ public class SphereSegAdvanced implements Command {
     
     @Parameter(persist=true)
     float realXYPixelSize=1f;
-    
-	@Parameter
-	StatusService sts;
 	
 	@Parameter(persist=true)
 	boolean clearOptimizer;
@@ -98,8 +95,7 @@ public class SphereSegAdvanced implements Command {
 		LimeSeg.saveOptState();
         if (clearOptimizer) {LimeSeg.clearOptimizer();}
         if ((!clearOptimizer)) {
-        	if ((stallDotsPreviouslyInOptimizer)) {
-        		
+        	if ((stallDotsPreviouslyInOptimizer)) {        		
 	        	LimeSeg.opt.dots.forEach(dn -> {
 	        		dn.stallDot();
 	        	});
@@ -123,12 +119,11 @@ public class SphereSegAdvanced implements Command {
         if (sameCell) {
         	LimeSeg.newCell();
         }
-        
+        int nRois=roiManager.getRoisAsArray().length;
 		for (Roi roi:roiManager.getRoisAsArray()) {
 			if (roi.getClass().equals(OvalRoi.class)) {
 				OvalRoi circle = (OvalRoi) roi;
 				float r0 = (float) ((circle.getFloatWidth()/2 + circle.getFloatHeight()/2)/2);
-				//LimeSeg.currentChannel = circle.getCPosition();
 				LimeSeg.currentFrame = circle.getTPosition();
 				if (LimeSeg.currentFrame==0) {LimeSeg.currentFrame=1;}
 				float z0 = circle.getZPosition();
@@ -143,7 +138,7 @@ public class SphereSegAdvanced implements Command {
 		    	if (!sameCell) {
 		    		LimeSeg.newCell();
 		    	}
-		        if (!this.randomColors) {
+		        if ((this.sameCell)||(nRois==1)) {
 		        	LimeSeg.setCellColor((float) (color.getRed()/255.0),
 		        					 	 (float) (color.getGreen()/255.0),
 		        					 	 (float) (color.getBlue()/255.0),
@@ -172,7 +167,6 @@ public class SphereSegAdvanced implements Command {
     		LimeSeg.make3DViewVisible();
     		LimeSeg.putAllCellsTo3DDisplay();
     		LimeSeg.set3DViewCenter(avgX/NCells,avgY/NCells,avgZ/NCells);
-    		//LimeSeg.jcr.setViewMode(8+LimeSeg.jcr.getViewMode()%8);
     	}
  	    float k_grad=(float) LimeSeg.opt.getOptParam("k_grad");
         LimeSeg.opt.setOptParam("k_grad",0.0f);
@@ -182,20 +176,24 @@ public class SphereSegAdvanced implements Command {
         LimeSeg.opt.requestResetDotsConvergence=true;
         LimeSeg.opt.setOptParam("k_grad",k_grad);
         LimeSeg.opt.setOptParam("normalForce",f_pressure);
-        LimeSeg.runOptimisation(numberOfIntegrationStep); 	
+        boolean RadiusDeltaChanged=false;
+        if ((LimeSeg.opt.cellTInOptimizer.size()>1)&&(LimeSeg.opt.getOptParam("radiusDelta")==0)) {
+        	RadiusDeltaChanged=true;
+        	LimeSeg.opt.setOptParam("radiusDelta", d_0/2);
+        }
+        LimeSeg.runOptimisation(numberOfIntegrationStep);
+        if (RadiusDeltaChanged) {
+        	LimeSeg.opt.setOptParam("radiusDelta", 0);
+        }
        	if (constructMesh) {
        	   	for (CellT ct : currentlyOptimizedCellTs) {
        	   		ct.constructMesh();
        	   	}
-       	   	//LimeSeg.constructMesh();
-       	   	if (show3D) {
-       	   		for (CellT ct : currentlyOptimizedCellTs) {
-       	   			LimeSeg.setCell3DDisplayMode(1);
-               		LimeSeg.currentCell=ct.c;
-   	    	 	}
-       	   	}
+       	   	for (CellT ct : currentlyOptimizedCellTs) {
+       	   		LimeSeg.setCell3DDisplayMode(1);
+            	LimeSeg.currentCell=ct.c;
+   	    	}
        	}
-
        	LimeSeg.notifyCellExplorerCellsModif=true;
        	if (showOverlayOuput) {
        	   	for (CellT ct : currentlyOptimizedCellTs) {
@@ -205,35 +203,9 @@ public class SphereSegAdvanced implements Command {
        	}
        	
        	if (appendMeasures) {
-       		//
-       		ResultsTable rt = Analyzer.getResultsTable();
-       	 
-       		if (rt == null) {
-       		        rt = new ResultsTable();
-       		        Analyzer.setResultsTable(rt);
-       		}
-       		for (CellT ct : currentlyOptimizedCellTs) {
-       		    rt.incrementCounter();
-       		    int i = rt.getLastColumn()+1;
-       			ct.updateCenter();
-       		    rt.addValue("Cell Name", ct.c.id_Cell);
-       			rt.addValue("Number of Surfels", ct.dots.size());
-       			rt.addValue("Center X", ct.center.x);
-       			rt.addValue("Center Y", ct.center.y);
-       			rt.addValue("Center Z", (ct.center.z/LimeSeg.opt.getOptParam("ZScale"))+1);
-       			rt.addValue("Frame", ct.frame);
-       			rt.addValue("Channel", ct.c.cellChannel);       			
-       			rt.addValue("Mesh ?", (constructMesh)?"YES":"NO");
-       			if (constructMesh) {
-       				rt.addValue("Euler characteristic", ct.dots.size()-3.0/2.0*ct.triangles.size()+ct.triangles.size());
-       				rt.addValue("Free edges", ct.freeEdges);
-       				rt.addValue("Surface", ct.getSurface());
-       				rt.addValue("Volume", ct.getVolume());
-       				rt.addValue("Real Surface", ct.getSurface()*(this.realXYPixelSize*this.realXYPixelSize));
-       				rt.addValue("Real Volume", ct.getVolume()*(this.realXYPixelSize*this.realXYPixelSize*this.realXYPixelSize));
-       			}
-       		}       		
-       		rt.show("Results");
+       		CommandHelper.displaySegmentationOutput(currentlyOptimizedCellTs, 
+       												this.realXYPixelSize, 
+       												this.constructMesh);
        	}
        
 	}

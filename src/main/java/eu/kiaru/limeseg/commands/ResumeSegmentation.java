@@ -1,14 +1,11 @@
 package eu.kiaru.limeseg.commands;
 
-import org.scijava.app.StatusService;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
 import eu.kiaru.limeseg.LimeSeg;
 import eu.kiaru.limeseg.struct.CellT;
-import ij.measure.ResultsTable;
-import ij.plugin.filter.Analyzer;
 import ij.plugin.frame.RoiManager;
 /**
  * Resumes a segmentation started within the optimizer
@@ -40,9 +37,6 @@ public class ResumeSegmentation implements Command {
     
     @Parameter(persist=true)
     float realXYPixelSize=1f;
-    
-	@Parameter
-	StatusService sts;
 	
 	@Override
 	public void run() {
@@ -61,7 +55,6 @@ public class ResumeSegmentation implements Command {
     	if (show3D) {
     		LimeSeg.make3DViewVisible();
     		LimeSeg.putAllCellsTo3DDisplay();
-    		//LimeSeg.jcr.setViewMode(8+LimeSeg.jcr.getViewMode()%8);
     	}
     	
         if (resetConvergence) {
@@ -86,34 +79,10 @@ public class ResumeSegmentation implements Command {
        	   	LimeSeg.updateOverlay();
        	}
        	
-       	if (appendMeasures) {
-       		ResultsTable rt = Analyzer.getResultsTable();
-       		if (rt == null) {
-       		        rt = new ResultsTable();
-       		        Analyzer.setResultsTable(rt);
-       		}
-       		for (CellT ct : LimeSeg.opt.cellTInOptimizer) {
-       		    rt.incrementCounter();
-       		    int i = rt.getLastColumn()+1;
-       			ct.updateCenter();
-       		    rt.addValue("Cell Name", ct.c.id_Cell);
-       			rt.addValue("Number of Surfels", ct.dots.size());
-       			rt.addValue("Center X", ct.center.x);
-       			rt.addValue("Center Y", ct.center.y);
-       			rt.addValue("Center Z", (ct.center.z/LimeSeg.opt.getOptParam("ZScale"))+1);
-       			rt.addValue("Frame", ct.frame);
-       			rt.addValue("Channel", ct.c.cellChannel);       			
-       			rt.addValue("Mesh ?", (constructMesh)?"YES":"NO");
-       			if (constructMesh) {
-       				rt.addValue("Euler characteristic", ct.dots.size()-3.0/2.0*ct.triangles.size()+ct.triangles.size());
-       				rt.addValue("Free edges", ct.freeEdges);
-       				rt.addValue("Surface", ct.getSurface());
-       				rt.addValue("Volume", ct.getVolume());
-       				rt.addValue("Real Surface", ct.getSurface()*(this.realXYPixelSize*this.realXYPixelSize));
-       				rt.addValue("Real Volume", ct.getVolume()*(this.realXYPixelSize*this.realXYPixelSize*this.realXYPixelSize));
-       			}
-       		}       		
-       		rt.show("Results");
-       	}  
+    	if (appendMeasures) {
+       		CommandHelper.displaySegmentationOutput(LimeSeg.opt.cellTInOptimizer, 
+       												this.realXYPixelSize, 
+       												this.constructMesh);
+       	}
 	}
 }
