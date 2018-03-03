@@ -14,7 +14,7 @@
 
 	<groupId>eu.kiaru</groupId>
 	<artifactId>limeseg</artifactId>
-	<version>0.3.3-SNAPSHOT</version>
+	<version>0.3.4</version>
 
 	<name>limeseg</name>
 	<url>http://</url>
