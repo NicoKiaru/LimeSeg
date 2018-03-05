@@ -156,5 +156,5 @@
 		</dependency>
 	</dependencies>	
 
-	<description>Lipid Membrane Segmentation method for ImageJ. To be published...</description>
+	<description>Lipid Membrane Segmentation method for ImageJ. https://doi.org/10.1101/267534 </description>
 </project>
