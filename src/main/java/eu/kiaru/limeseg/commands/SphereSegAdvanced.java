@@ -40,7 +40,7 @@ public class SphereSegAdvanced implements Command {
 	float f_pressure = 0.015f;
 	
 	@Parameter(persist=true)
-	float z_scale = 1f;
+	double z_scale = 1f;
 
     @Parameter(persist=true)
     private ImagePlus imp;
@@ -105,7 +105,7 @@ public class SphereSegAdvanced implements Command {
             	});
         	}
         }
-    	LimeSeg.opt.setOptParam("ZScale", z_scale);
+    	LimeSeg.opt.setOptParam("ZScale", (float)z_scale);
         LimeSeg.opt.setOptParam("d_0",d_0);
         LimeSeg.opt.setOptParam("radiusSearch",d_0*range_in_d0_units);
         LimeSeg.opt.setOptParam("normalForce",f_pressure);
