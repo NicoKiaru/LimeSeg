@@ -1,4 +1,5 @@
 waitForUser("IJPB-Plugins Update site needs to be enabled!");
+run("Show GUI"); // Initializes LimeSeg
 run("Clear all"); // Clear previous LimeSeg outputs
 // Fetch C Elegans example image
 waitForUser("Fetch C Elegans example image");
@@ -23,8 +24,9 @@ close();
 radius=10;
 
 // Stores results into ROI Manager
-waitForUser("Stores results into ROI Manager (click the Statistics windows, otherwise this will not work!)");
-IJ.renameResults("Results");
+waitForUser("Store results into ROI Manager");
+//IJ.renameResults("Results");
+Table.rename("Statistics for dub19-half-GaussianBlurred.tif", "Results");
 
 
 for (i=0;i<nResults;i++) {
