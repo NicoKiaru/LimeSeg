@@ -41,8 +41,8 @@ def clearRoiManager() {
 }
 
 clearRoiManager();
-addCircleToRoiManager(imgPlus,75,90,14,20); // Vesicle 1
-addCircleToRoiManager(imgPlus,89,21,19,10); // Vesicle 2
+addCircleToRoiManager(imgPlus,75,90,14,15); // Vesicle 1
+addCircleToRoiManager(imgPlus,89,21,19,15); // Vesicle 2
 
 // ij2 way of launching a command
 ij.command().run(ClearAll.class,true) // Clears all previous objects of LimeSeg
@@ -54,7 +54,7 @@ ij.command().run(SphereSeg.class,true,
 					"sameCell",false,
 					"show3D",true,
 					"color", new ColorRGB(200,150,50),
-					"numberOfIntegrationStep",-1*0,
+					"numberOfIntegrationStep",-1,
 					"realXYPixelSize",0.133);
 
 // ImageJ 1 way of executing the command

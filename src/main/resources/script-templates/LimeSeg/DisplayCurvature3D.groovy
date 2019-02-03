@@ -10,8 +10,8 @@ import eu.kiaru.limeseg.gui.DefaultDotNColorSupplier;
 
 d0=(float) LimeSeg.opt.getOptParam("d_0");
 
-LimeSeg.jcr.colorSupplier = new GaussianCurvatureColorLUT(1000f);
-//LimeSeg.jcr.colorSupplier = new MeanCurvatureColorLUT(80f);
+//LimeSeg.jcr.colorSupplier = new GaussianCurvatureColorLUT(500f);
+LimeSeg.jcr.colorSupplier = new MeanCurvatureColorLUT(40f);
 //LimeSeg.jcr.colorSupplier = new DefaultDotNColorSupplier();
 
 LimeSeg.update3DDisplay();
@@ -61,11 +61,11 @@ public class MeanCurvatureColorLUT extends DotNColorSupplier {
 
 	public float[] getColor(DotN dn) {
 		float curvature=(float) dn.meanCurvature;
-		if (curvature<0f) {
-        	return [0.5f,(float)(0.5f*(1+(Math.atan(-emphasize*curvature)*2/Math.PI))),0.5f,1f] as float[];
-		}
 		if (curvature>0f) {
-        	return [(float)(0.5f*(1+(Math.atan(emphasize*curvature)*2/Math.PI))),0.5f,0.5f,1f] as float[];
+        	return [0.5f,(float)(0.5f*(1+(Math.atan(emphasize*curvature)*2/Math.PI))),0.5f,1f] as float[];
+		}
+		if (curvature<0f) {
+        	return [(float)(0.5f*(1+(Math.atan(-emphasize*curvature)*2/Math.PI))),0.5f,0.5f,1f] as float[];
         }
     }
 	

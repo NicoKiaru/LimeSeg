@@ -9,7 +9,7 @@ import eu.kiaru.limeseg.gui.DotNColorSupplier;
 import eu.kiaru.limeseg.gui.DefaultDotNColorSupplier;
 
 d0=(float) LimeSeg.opt.getOptParam("d_0");
-range = 3f;
+range = 2.5f;
 
 for (Cell c:LimeSeg.allCells) {
 	LimeSeg.currentCell=c;
