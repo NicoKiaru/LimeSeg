@@ -266,7 +266,7 @@ public class LimeSeg implements Command {
                 Vector3D pos = new Vector3D(px+normal.x,
                                               py+normal.y,
                                               pz+normal.z);
-                DotN nd=new DotN(pos,normal);                                       
+                DotN nd=new DotN(pos,normal);
                 ans.add(nd);               
             }
         }
@@ -284,21 +284,18 @@ public class LimeSeg implements Command {
      */
     static public ArrayList<DotN> makeCylinder(float d_0, float px, float py, float pz, float radius, float height) {
         ArrayList<DotN> ans = new ArrayList<DotN>();
-        float dlat=d_0/radius;
-        float lat_i=(float) (-java.lang.Math.PI/2);
-        float lat_f=(float) (java.lang.Math.PI/2);//-dlat;
-        for (float lat=lat_i+dlat; lat<(lat_f); lat=lat+dlat) {
+        for (float z=pz-height/2; z<pz+height/2; z=z+d_0) {
             // We put points around a circle of radius = radius.cos(lat)
-            float R=(float) (radius*java.lang.Math.cos(lat));
+            float R=(float) radius;
             float N=(int)(java.lang.Math.PI*2.0*R/d_0);
             float dAngle=(float) (java.lang.Math.PI*2.0/N);
             for (float i=0;i<N;i++) {
                 Vector3D normal = new Vector3D((float)(R*java.lang.Math.sin(i*dAngle)),
                         (float)(R*java.lang.Math.cos(i*dAngle)),
-                        (float)(radius*java.lang.Math.sin(lat)));
+                        0);
                 Vector3D pos = new Vector3D(px+normal.x,
                         py+normal.y,
-                        pz+normal.z);
+                        z);
                 DotN nd=new DotN(pos,normal);
                 ans.add(nd);
             }
@@ -869,7 +866,8 @@ public class LimeSeg implements Command {
      */
     @IJ1ScriptableMethod(target=VIEW_2D, ui="STD", pr=0)
     static public void clearOverlay() {
-        dots_to_overlay.clear();
+        if (dots_to_overlay!=null)
+            dots_to_overlay.clear();
     }
     
     /**
@@ -1137,12 +1135,14 @@ public class LimeSeg implements Command {
     @IJ1ScriptableMethod(target=STATE, tt="(String arg)")
     static public void clearCell(String arg) {        
         if (arg.toUpperCase().equals("ALL")) {
-            allCells.clear();      
-            if ((jcr!=null)) {
-            	jcr.clearDisplayedCells();
+            if (allCells!=null) {
+                allCells.clear();
+                if ((jcr != null)) {
+                    jcr.clearDisplayedCells();
+                }
+                notifyCellExplorerCellsModif = true;
+                notifyCellRendererCellsModif = true;
             }
-            notifyCellExplorerCellsModif=true;
-            notifyCellRendererCellsModif=true;
         } else if (findCell(arg)!=null) {
             Cell c = findCell(arg);           
             if (c!=null) {

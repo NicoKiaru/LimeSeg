@@ -12,8 +12,6 @@ import java.util.stream.Collectors;
 import org.orangepalantir.leastsquares.Fitter;
 import org.orangepalantir.leastsquares.Function;
 import org.orangepalantir.leastsquares.fitters.LinearFitter;
-import org.orangepalantir.leastsquares.fitters.MarquardtFitter;
-import org.orangepalantir.leastsquares.fitters.NonLinearSolver;
 
 public class CurvaturesComputer {
 
@@ -54,11 +52,12 @@ public class CurvaturesComputer {
                 // 1 - Let's find a local 3D coordinate system: d.Norm = n, u and v
 
                 Vector3D n = d.Norm.clone();
+                n.x*=-1; n.y*=-1; n.z*=-1;
                 Vector3D u;
                 if (d.Norm.x<0.1f) {
-                    u = new Vector3D(0f,-n.z,n.y);
+                    u = new Vector3D(0f,n.z,-n.y);
                 } else {
-                    u = new Vector3D(-n.y,n.x,0);
+                    u = new Vector3D(n.y,-n.x,0);
                 }
                 u.normalize();
                 Vector3D v = Vector3D.prodVect(n,u); // Norm = 1 by construction
@@ -94,12 +93,13 @@ public class CurvaturesComputer {
                     dataZPos[i] = localPos.get(i)[2];
                 }
 
+                //http://mathworld.wolfram.com/SecondFundamentalForm.html
                 Function fun = new Function(){
                     @Override
                     public double evaluate(double[] p, double[] lc) {
-                        return p[0]*p[0]*lc[0]
-                                +p[0]*p[1]*(-2*lc[1])
-                                +p[1]*p[1]*lc[2];
+                        return p[0]*p[0]*lc[0]/2
+                                +p[0]*p[1]*lc[1]
+                                +p[1]*p[1]*lc[2]/2; // Quadratic expression of the local surface height, see https://en.wikipedia.org/wiki/Second_fundamental_form
                     }
                     @Override
                     public int getNParameters() {
@@ -118,7 +118,6 @@ public class CurvaturesComputer {
                 try {
                     fit.fitData();
                     lc.cM=fit.getParameters();
-
                     d.meanCurvature=(float) lc.getMeanCurvature();
                     d.gaussianCurvature=(float) lc.getGaussianCurvature();
                     curvature.put(d,lc);
