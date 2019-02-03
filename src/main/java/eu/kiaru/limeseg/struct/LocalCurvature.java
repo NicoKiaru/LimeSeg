@@ -9,7 +9,7 @@ public class LocalCurvature {
     public double[] cM = new double[] {0f,0f,0f}; // opposed triangular curvature Matrix
 
     public double getGaussianCurvature() { // Matrix determinant
-        return cM[0]*cM[2]+cM[1]*cM[1];
+        return cM[0]*cM[2]-cM[1]*cM[1];
     }
 
     public double getMeanCurvature() { // Matrix trace
@@ -18,6 +18,7 @@ public class LocalCurvature {
 
     public Vector3D[] getPrincipalCurvatures() {
         // Unsupported yet
+        // Should diagonalize the matrix and returns the two eigen vectors
         return null;
     }
 

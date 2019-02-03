@@ -1,14 +1,9 @@
 package eu.kiaru.limeseg.commands;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
-import eu.kiaru.limeseg.opt.CurvaturesComputer;
-import org.scijava.Initializable;
 import org.scijava.command.Command;
-import org.scijava.command.DynamicCommand;
 import org.scijava.command.CommandService;
-import org.scijava.module.MutableModuleItem;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.util.ColorRGB;
@@ -63,7 +58,6 @@ public class SphereSeg implements Command {
         boolean constructMesh=true; 
         boolean clearOptimizer=true;
         boolean appendMeasures=true;
-        boolean randomColors=true;
         boolean stallDotsPreviouslyInOptimizer=false;
 
 		
@@ -189,36 +183,6 @@ public class SphereSeg implements Command {
 	       												this.realXYPixelSize, 
 	       												constructMesh);
 	       	}
-		
-		
-		
-		// ------------ Doesn't work with get and macro recorder
-        /*try {
-			cs.run(SphereSegAdvanced.class,true,
-					// Fixed parameters for "simple" version
-								           "showOverlayOuput",true,
-								           "constructMesh",true, 
-								           "clearOptimizer",true,
-								           "appendMeasures",true,
-								           "randomColors",true,
-								           "stallDotsPreviouslyInOptimizer",false,
-					// Communicated parameters (not necessary for GUI but for transparent scriptability)
-								           "d_0",d_0,
-								           "realXYPixelSize",realXYPixelSize,
-								           "numberOfIntegrationStep",numberOfIntegrationStep,
-								           "show3D",show3D,
-								           "sameCell",sameCell,
-								           "color",color,
-								           "range_in_d0_units",range_in_d0_units,
-								           "imp",imp,
-								           "z_scale",z_scale,
-								           "f_pressure",f_pressure
-								       ).get();
-		} catch (InterruptedException | ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
 	}
 	
 	
