@@ -154,6 +154,13 @@
 			<groupId>org.scijava</groupId>
 			<artifactId>j3dutils</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.orangepalantir</groupId>
+			<artifactId>leastsquares</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
 	</dependencies>	
 
 	<description>Lipid Membrane Segmentation method for ImageJ. https://doi.org/10.1101/267534 </description>

@@ -3,6 +3,7 @@ package eu.kiaru.limeseg.commands;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import eu.kiaru.limeseg.opt.CurvaturesComputer;
 import org.scijava.Initializable;
 import org.scijava.command.Command;
 import org.scijava.command.DynamicCommand;

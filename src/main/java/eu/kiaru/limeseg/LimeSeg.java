@@ -272,6 +272,39 @@ public class LimeSeg implements Command {
         }
         return ans;
     }
+
+    /**
+     * Generates a sphere surface made of surfels. All units in pixels
+     * @param d_0 equilibrium distance between surfels in pixels
+     * @param px sphere center X
+     * @param py sphere center Y
+     * @param pz sphere center Z
+     * @param radius sphere radius
+     * @return
+     */
+    static public ArrayList<DotN> makeCylinder(float d_0, float px, float py, float pz, float radius, float height) {
+        ArrayList<DotN> ans = new ArrayList<DotN>();
+        float dlat=d_0/radius;
+        float lat_i=(float) (-java.lang.Math.PI/2);
+        float lat_f=(float) (java.lang.Math.PI/2);//-dlat;
+        for (float lat=lat_i+dlat; lat<(lat_f); lat=lat+dlat) {
+            // We put points around a circle of radius = radius.cos(lat)
+            float R=(float) (radius*java.lang.Math.cos(lat));
+            float N=(int)(java.lang.Math.PI*2.0*R/d_0);
+            float dAngle=(float) (java.lang.Math.PI*2.0/N);
+            for (float i=0;i<N;i++) {
+                Vector3D normal = new Vector3D((float)(R*java.lang.Math.sin(i*dAngle)),
+                        (float)(R*java.lang.Math.cos(i*dAngle)),
+                        (float)(radius*java.lang.Math.sin(lat)));
+                Vector3D pos = new Vector3D(px+normal.x,
+                        py+normal.y,
+                        pz+normal.z);
+                DotN nd=new DotN(pos,normal);
+                ans.add(nd);
+            }
+        }
+        return ans;
+    }
     
     /*
      * ------------------- Methods and attributes used to avoid conflicts between segmentation threads and 3D viewer thread

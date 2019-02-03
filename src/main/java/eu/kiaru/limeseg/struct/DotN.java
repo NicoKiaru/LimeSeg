@@ -136,6 +136,18 @@ public class DotN implements Cloneable {
      * For cell tesselation, this variable keeps a list of the neighboring surfels of the same CellT
      */
     public ArrayList<Integer> Voisins=null;
+    /**
+     * Can be computed with a @see CurvaturesComputer
+     */
+    public float gaussianCurvature = Float.NaN;
+    /**
+     * Can be computed with a @see CurvaturesComputer
+     */
+    public float meanCurvature = Float.NaN;
+    /**
+     * Value within image during last optimization step
+     */
+    public float floatImageValue = Float.NaN;
     
     @Override
     public String toString() {
@@ -254,6 +266,7 @@ public class DotN implements Cloneable {
         rA.setPosition(zp/ZScale, 2);
         val_max.set(rA.get());
         T val_test;
+        this.floatImageValue = val_max.getRealFloat();
         float r=0;
         int NSteps=(int) ((radiusSearch/2f)/(radiusRes));
         relaxed=1f;

@@ -65,7 +65,8 @@ import org.scijava.java3d.utils.universe.SimpleUniverse;
  *
  */
 public class JOGL3DCellRenderer implements GLEventListener, KeyListener, MouseListener {
-    
+
+    DotNColorSupplier colorSupplier = new DefaultDotNColorSupplier();
 	/**
 	 * "Zoom" of 3D Viewer
 	 */
@@ -559,16 +560,14 @@ public class JOGL3DCellRenderer implements GLEventListener, KeyListener, MouseLi
         float rnp,gnp,bnp,anp; // RGBA plane
         int indexPtCellStart=0;
         for (Cell c : this.cellsToDisplay) { // concurrent modification error!
-          rnp=c.color[0];                    
-          gnp=c.color[1];                    
-          bnp=c.color[2];                    
-          anp=c.color[3];
+          float[] currentcolor;
           CellT ct=c.getCellTAt(CurrFrame);
           float nx, ny, nz;
           float px, py, pz;
           if ((ct!=null)&&(ct.tesselated==true)&&(c.display_mode>0)) {
               indexPtCellStart=indexPt/this.numberOfFloatPerVertex_TR;
-              for (DotN dot : ct.dots) {                
+              for (DotN dot : ct.dots) {
+                  currentcolor = this.colorSupplier.getColor(dot);
                   nx=dot.Norm.x;ny=dot.Norm.y;nz=dot.Norm.z;
                   px=dot.pos.x;py=dot.pos.y;pz=dot.pos.z;
                   //Caused by: java.lang.ArrayIndexOutOfBoundsException: 
@@ -579,10 +578,10 @@ public class JOGL3DCellRenderer implements GLEventListener, KeyListener, MouseLi
                   dataVertex_TR[indexPt++]=nx;
                   dataVertex_TR[indexPt++]=ny;
                   dataVertex_TR[indexPt++]=nz;
-                  dataVertex_TR[indexPt++]=rnp;//(float)((java.lang.Math.cos((px*java.lang.Math.cos(py/25.))/25.)+1.)/2.);//java.lang.Math.random();//rnp;
-                  dataVertex_TR[indexPt++]=gnp;//(float)((java.lang.Math.cos((px*pz)/2500.)+1.)/2.);//(float)java.lang.Math.random();//gnp;
-                  dataVertex_TR[indexPt++]=bnp;//(float)((java.lang.Math.cos((py+pz)/25.)+1.)/2.);//(float)java.lang.Math.random();//bnp;
-                  dataVertex_TR[indexPt++]=anp;
+                  dataVertex_TR[indexPt++]=currentcolor[0];//(float)((java.lang.Math.cos((px*java.lang.Math.cos(py/25.))/25.)+1.)/2.);//java.lang.Math.random();//rnp;
+                  dataVertex_TR[indexPt++]=currentcolor[1];//(float)((java.lang.Math.cos((px*pz)/2500.)+1.)/2.);//(float)java.lang.Math.random();//gnp;
+                  dataVertex_TR[indexPt++]=currentcolor[2];//(float)((java.lang.Math.cos((py+pz)/25.)+1.)/2.);//(float)java.lang.Math.random();//bnp;
+                  dataVertex_TR[indexPt++]=currentcolor[3];
               }
               for (TriangleN tr : ct.triangles) {
                   dataTriangles_TR[indexTri++]=tr.id1+indexPtCellStart;
@@ -593,7 +592,8 @@ public class JOGL3DCellRenderer implements GLEventListener, KeyListener, MouseLi
       }  
       LimeSeg.setBuffFilled(true);
     }
-    
+
+    // Called during optimization
     synchronized public void fillBufferCellRenderer_PC(ArrayList<DotN> aList) {
         int nDotsToBeDisplayed=aList.size();        
         int marginUp=2;
@@ -672,17 +672,15 @@ public class JOGL3DCellRenderer implements GLEventListener, KeyListener, MouseLi
         }
         numberOfDotsInDataVertex_PC = nDotsToBeDisplayed;
         int index=0;
-        float rnp,gnp,bnp,anp; // RGBA plane
+        //float rnp,gnp,bnp,anp; // RGBA plane
         for (Cell c : this.cellsToDisplay) {
-          rnp=c.color[0];                    
-          gnp=c.color[1];                    
-          bnp=c.color[2];                    
-          anp=c.color[3];
+          float[] currentcolor;
           CellT ct=c.getCellTAt(CurrFrame);
           float nx, ny, nz;
           float px, py, pz;
           if ((ct!=null)&&((ct.tesselated==false)||(c.display_mode==0))) {
-              for (DotN dot : ct.dots) {                
+              for (DotN dot : ct.dots) {
+                  currentcolor = this.colorSupplier.getColor(dot);
                   nx=dot.Norm.x;ny=dot.Norm.y;nz=dot.Norm.z;
                   px=dot.pos.x;py=dot.pos.y;pz=dot.pos.z;
                   dataVertex_PC[index++]=px; // java.lang.ArrayIndexOutOfBoundsException: 61660
@@ -691,10 +689,10 @@ public class JOGL3DCellRenderer implements GLEventListener, KeyListener, MouseLi
                   dataVertex_PC[index++]=nx;
                   dataVertex_PC[index++]=ny;
                   dataVertex_PC[index++]=nz;
-                  dataVertex_PC[index++]=rnp;
-                  dataVertex_PC[index++]=gnp;
-                  dataVertex_PC[index++]=bnp;
-                  dataVertex_PC[index++]=anp;
+                  dataVertex_PC[index++]=currentcolor[0];//rnp;
+                  dataVertex_PC[index++]=currentcolor[1];//gnp;
+                  dataVertex_PC[index++]=currentcolor[2];//bnp;
+                  dataVertex_PC[index++]=currentcolor[3];//anp;
               }
           }
       }
