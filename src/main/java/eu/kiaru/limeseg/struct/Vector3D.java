@@ -66,6 +66,14 @@ public class Vector3D implements Cloneable{
         output.y=v1.z*v2.x-v1.x*v2.z;
         output.z=v1.x*v2.y-v1.y*v2.x;
     }
+
+    static public Vector3D sum(Vector3D v1, Vector3D v2) {
+        Vector3D output = new Vector3D (
+        v1.x+v2.x,
+        v1.y+v2.y,
+        v1.z+v2.z);
+        return output;
+    }
     
     @Override
     public String toString() {

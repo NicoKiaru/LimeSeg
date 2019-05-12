@@ -55,6 +55,8 @@ import glm.vec._3.Vec3;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 
 import org.scijava.java3d.Canvas3D;
@@ -710,7 +712,32 @@ public class JOGL3DCellRenderer implements GLEventListener, KeyListener, MouseLi
             this.cellsToDisplay.remove(c);
         }   
     }
-    
+
+    public boolean trackCurrentCell = false;
+
+    public int maxNumberOfPtsTakenForCenterComputation = 32384;
+
+    public void setLookAtTrackedPosition() {
+        Cell c = LimeSeg.currentCell;
+        // Is there a current cell ?
+        if (c==null) return;
+        // Is there a cell at the current timepoint ?
+        CellT ct = c.getCellTAt(CurrFrame);
+        if (ct==null) return;
+        // Are there any points in this CellT ?
+        if (ct.dots==null) return;
+        if (ct.dots.size()==0) return;
+        // All set
+        Stream<Vector3D> ptsStream = ct.dots.stream().map(dn -> dn.pos).limit(maxNumberOfPtsTakenForCenterComputation); // don't want to compute too much
+        lookAt = ptsStream.reduce(Vector3D::sum).get();
+        int nPts = (ct.dots.size()>maxNumberOfPtsTakenForCenterComputation)?maxNumberOfPtsTakenForCenterComputation:ct.dots.size();
+
+            lookAt.x/=nPts;
+            lookAt.y/=nPts;
+            lookAt.z/=nPts;
+
+    }
+
     @Override  
     public void display(GLAutoDrawable drawable) {     
         // Fetch points data if changed
@@ -725,6 +752,10 @@ public class JOGL3DCellRenderer implements GLEventListener, KeyListener, MouseLi
         } else {
             CurrSlice=1;NSlices=1;NChannel=1;CurrFrame=1;CurrZSlice=1;
             frameHasChanged=false;
+        }
+
+        if (trackCurrentCell) {
+            setLookAtTrackedPosition();
         }
           
         if ((LimeSeg.notifyCellRendererCellsModif || frameHasChanged)&&(!LimeSeg.getBuffFilled())) {
@@ -842,7 +873,6 @@ public class JOGL3DCellRenderer implements GLEventListener, KeyListener, MouseLi
     public void mouseWheelMoved(MouseEvent me) {
         RatioGlobal*=(8f+me.getRotation()[1])/8f;
     }
-  
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -850,7 +880,6 @@ public class JOGL3DCellRenderer implements GLEventListener, KeyListener, MouseLi
         prevMouseY = e.getY();
     }
 
-        
     @Override
 	public void mouseReleased(MouseEvent e) {
     }
@@ -886,27 +915,27 @@ public class JOGL3DCellRenderer implements GLEventListener, KeyListener, MouseLi
         view_roty -= thetaY;
       }
 
-      @Override
-      public void mouseClicked(MouseEvent me) {
+    @Override
+    public void mouseClicked(MouseEvent me) {
            // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
       }
 
-      @Override
-      public void mouseEntered(MouseEvent me) {
+    @Override
+    public void mouseEntered(MouseEvent me) {
            // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
       }
 
-      @Override
-      public void mouseExited(MouseEvent me) {
+    @Override
+    public void mouseExited(MouseEvent me) {
          // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
       }
 
-      @Override
-      public void mouseMoved(MouseEvent me) {
+    @Override
+    public void mouseMoved(MouseEvent me) {
             // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
       }
       
-      public static Mat4 inverse(Mat4 src, Mat4 dest) {
+    public static Mat4 inverse(Mat4 src, Mat4 dest) {
 
     	    float m00=src.m00, m10=src.m10, m20=src.m20, m30=src.m30;
     	    float m01=src.m01, m11=src.m11, m21=src.m21, m31=src.m31;
@@ -945,6 +974,5 @@ public class JOGL3DCellRenderer implements GLEventListener, KeyListener, MouseLi
                   (+m20 * d - m21 * b + m22 * a) * det);
           return dest;
       } 
-      
- 
+
 }

@@ -1100,7 +1100,49 @@ public class LimeSeg implements Command {
    		if ((index>=0)&&(index<allCells.size()))
 			currentCell=allCells.get(index);
    	}
-    
+
+    /**
+     * Select next cell, according to index
+     */
+    @IJ1ScriptableMethod(target=CURRENT_CELL, ui="STD", tt="()", pr=3)
+    static public void selectNextCell() {
+        if (currentCell!=null) {
+            int cIndex = allCells.indexOf(currentCell);
+            if (cIndex!=-1) { // object found
+                if (cIndex<allCells.size()-1) {
+                    currentCell = allCells.get(cIndex+1);
+                    notifyCellExplorerCellsModif=true;
+                } else {
+                    currentCell = allCells.get(0);
+                    if (allCells.size()>1) {
+                        notifyCellExplorerCellsModif=true;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Select next cell, according to index
+     */
+    @IJ1ScriptableMethod(target=CURRENT_CELL, ui="STD", tt="()", pr=3)
+    static public void selectPreviousCell() {
+        if (currentCell!=null) {
+            int cIndex = allCells.indexOf(currentCell);
+            if (cIndex!=-1) { // object found
+                if (cIndex>0) {
+                    currentCell = allCells.get(cIndex-1);
+                    notifyCellExplorerCellsModif=true;
+                } else {
+                    currentCell = allCells.get(allCells.size()-1);
+                    if (allCells.size()>1) {
+                        notifyCellExplorerCellsModif=true;
+                    }
+                }
+            }
+        }
+    }
+
 	/**
 	 * Set color of current cell
 	 * @param r
@@ -1699,6 +1741,25 @@ public class LimeSeg implements Command {
     static public void get3DViewMode(Double[] value) {
         value[0]=(double) jcr.getViewMode();
     }
+
+    /**
+     * Center the 3D Viewer on the current selected cell
+     */
+    @IJ1ScriptableMethod(target=VIEW_3D,ui="STD", tt="()")
+    static public void enableTrackCurrentCell() {
+        make3DViewVisible();
+        jcr.trackCurrentCell=true;
+    }
+
+    /**
+     * Disable centering the 3D Viewer on the current selected cell
+     */
+    @IJ1ScriptableMethod(target=VIEW_3D,ui="STD", tt="()")
+    static public void disableTrackCurrentCell() {
+        make3DViewVisible();
+        jcr.trackCurrentCell=false;
+    }
+
     /**
      * See {@link #setCell3DDisplayMode(int)}
      * @param vMode
