@@ -68,7 +68,7 @@ import org.scijava.java3d.utils.universe.SimpleUniverse;
  */
 public class JOGL3DCellRenderer implements GLEventListener, KeyListener, MouseListener {
 
-    DotNColorSupplier colorSupplier = new DefaultDotNColorSupplier();
+    public DotNColorSupplier colorSupplier = new DefaultDotNColorSupplier();
 	/**
 	 * "Zoom" of 3D Viewer
 	 */
