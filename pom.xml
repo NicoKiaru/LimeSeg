@@ -14,7 +14,7 @@
 
 	<groupId>eu.kiaru</groupId>
 	<artifactId>limeseg</artifactId>
-	<version>0.4.1-SNAPSHOT</version>
+	<version>0.4.2</version>
 
 	<name>limeseg</name>
 	<url>http://</url>
@@ -87,6 +87,9 @@
 		<main-class>eu.kiaru.limeseg.LimeSeg</main-class>
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>Nicolas Chiaruttini</license.copyrightOwners>
+
+		<!-- NB: Deploy releases to the SciJava Maven repository. -->
+		<releaseProfiles>deploy-to-scijava</releaseProfiles>
 	</properties>
 
 	<repositories>

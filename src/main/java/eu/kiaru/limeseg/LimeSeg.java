@@ -1,6 +1,7 @@
 package eu.kiaru.limeseg;
 
 
+import eu.kiaru.limeseg.gui.*;
 import ij.ImagePlus;
 import ij.WindowManager;
 
@@ -20,9 +21,6 @@ import java.util.ArrayList;
 import org.scijava.command.Command;
 import org.scijava.plugin.Plugin;
 
-import eu.kiaru.limeseg.gui.JFrameLimeSeg;
-import eu.kiaru.limeseg.gui.JOGL3DCellRenderer;
-import eu.kiaru.limeseg.gui.JTableCellsExplorer;
 import eu.kiaru.limeseg.ij1script.HandleIJ1Extension;
 import eu.kiaru.limeseg.ij1script.IJ1ScriptableMethod;
 import eu.kiaru.limeseg.io.IOXmlPlyLimeSeg;
@@ -34,7 +32,7 @@ import eu.kiaru.limeseg.struct.PolygonSkeleton;
 import eu.kiaru.limeseg.struct.Skeleton2D;
 import eu.kiaru.limeseg.struct.Vector3D;
 import eu.kiaru.limeseg.demos.SegCElegans;
-import eu.kiaru.limeseg.gui.DisplayableOutput;
+
 /**
  * Helper class for LimeSeg segmentation
  * The segmentation objects are called Cells
@@ -963,6 +961,28 @@ public class LimeSeg implements Command {
     		putCellTo3DDisplay(currentCell);
     	}
     }
+
+    /**
+     * Updates the 3D viewer:
+     * 	- puts the cell color according to their default color defined in the Cell class
+     */
+    @IJ1ScriptableMethod(target=VIEW_3D, ui="STD", pr=2)
+    static public void setDefaultColor3DDisplay() {
+        make3DViewVisible();
+        LimeSeg.jcr.colorSupplier = new DefaultDotNColorSupplier();
+        notifyCellRendererCellsModif=true;
+    }
+
+    /**
+     * Updates the 3D viewer:
+     * 	- displays currentCell in Green, others in Red
+     */
+    @IJ1ScriptableMethod(target=VIEW_3D, ui="STD", pr=2)
+    static public void setCurrentCellColorLUT() {
+        make3DViewVisible();
+        LimeSeg.jcr.colorSupplier = new CurrentCellColorLUT();
+        notifyCellRendererCellsModif=true;
+    }
     
     /**
      * Sets the center of the 3D viewer
@@ -1089,6 +1109,7 @@ public class LimeSeg implements Command {
 	    allCells.add(currentCell);          
 	    notifyCellExplorerCellsModif=true;
 	    notifyCellRendererCellsModif=true;
+        checkSelectColorLUT();
 	}
     
 	/**
@@ -1097,10 +1118,66 @@ public class LimeSeg implements Command {
 	 */
 	@IJ1ScriptableMethod(target=STATE, ui="STD", tt="(int index)", pr=3)
 	static public void selectCellByNumber(int index) {
-   		if ((index>=0)&&(index<allCells.size()))
-			currentCell=allCells.get(index);
+   		if ((index>=0)&&(index<allCells.size())) {
+            currentCell = allCells.get(index);
+            checkSelectColorLUT();
+        }
    	}
-    
+
+    /**
+     * Select next cell, according to index
+     */
+    @IJ1ScriptableMethod(target=CURRENT_CELL, ui="STD", tt="()", pr=3)
+    static public void selectNextCell() {
+        if (currentCell!=null) {
+            int cIndex = allCells.indexOf(currentCell);
+            if (cIndex!=-1) { // object found
+                if (cIndex<allCells.size()-1) {
+                    currentCell = allCells.get(cIndex+1);
+                    notifyCellExplorerCellsModif=true;
+                    checkSelectColorLUT();
+                } else {
+                    currentCell = allCells.get(0);
+                    if (allCells.size()>1) {
+                        notifyCellExplorerCellsModif=true;
+                        checkSelectColorLUT();
+                    }
+                }
+            }
+        }
+    }
+
+    public static void checkSelectColorLUT() {
+        if (jcr!=null) {
+            if (jcr.colorSupplier instanceof CurrentCellColorLUT) {
+                notifyCellRendererCellsModif=true;
+            }
+        }
+    }
+
+    /**
+     * Select next cell, according to index
+     */
+    @IJ1ScriptableMethod(target=CURRENT_CELL, ui="STD", tt="()", pr=3)
+    static public void selectPreviousCell() {
+        if (currentCell!=null) {
+            int cIndex = allCells.indexOf(currentCell);
+            if (cIndex!=-1) { // object found
+                if (cIndex>0) {
+                    currentCell = allCells.get(cIndex-1);
+                    notifyCellExplorerCellsModif=true;
+                    checkSelectColorLUT();
+                } else {
+                    currentCell = allCells.get(allCells.size()-1);
+                    if (allCells.size()>1) {
+                        notifyCellExplorerCellsModif=true;
+                        checkSelectColorLUT();
+                    }
+                }
+            }
+        }
+    }
+
 	/**
 	 * Set color of current cell
 	 * @param r
@@ -1178,6 +1255,7 @@ public class LimeSeg implements Command {
     @IJ1ScriptableMethod(target=STATE, ui="STD", tt="(String id)", pr=4)
     static public void selectCellById(String id) {
     	currentCell=findCell(id);
+        checkSelectColorLUT();
     }
 
     //----------------- Current CellT
@@ -1699,6 +1777,25 @@ public class LimeSeg implements Command {
     static public void get3DViewMode(Double[] value) {
         value[0]=(double) jcr.getViewMode();
     }
+
+    /**
+     * Center the 3D Viewer on the current selected cell
+     */
+    @IJ1ScriptableMethod(target=VIEW_3D,ui="STD", tt="()")
+    static public void enableTrackCurrentCell() {
+        make3DViewVisible();
+        jcr.trackCurrentCell=true;
+    }
+
+    /**
+     * Disable centering the 3D Viewer on the current selected cell
+     */
+    @IJ1ScriptableMethod(target=VIEW_3D,ui="STD", tt="()")
+    static public void disableTrackCurrentCell() {
+        make3DViewVisible();
+        jcr.trackCurrentCell=false;
+    }
+
     /**
      * See {@link #setCell3DDisplayMode(int)}
      * @param vMode
