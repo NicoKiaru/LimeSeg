@@ -57,10 +57,10 @@ public class SphereSegAdvanced implements Command {
     boolean sameCell;
     
     @Parameter(persist=true)
-    boolean showOverlayOuput;
+    boolean showOverlayOuput = true;
     
     @Parameter(persist=true)
-    boolean show3D;
+    boolean show3D = true;
     
     @Parameter(persist=true)
     boolean constructMesh=true;
@@ -115,6 +115,11 @@ public class SphereSegAdvanced implements Command {
         float avgZ=0;
         int NCells=0;
         ArrayList<CellT> currentlyOptimizedCellTs = new ArrayList<>();
+		
+	if (imp == null)
+        	imp = IJ.openImage();
+		
+		
         LimeSeg.currentChannel = imp.getChannel();
         if (sameCell) {
         	LimeSeg.newCell();
