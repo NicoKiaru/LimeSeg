@@ -9,7 +9,8 @@ LimeSeg is a modular 3D image segmentation method. Based on the idea of SURFace 
 
 Documentation
 ------------------------
-For the documentation, go to http://imagej.net/LimeSeg/.
+For the documentation, go to http://imagej.net/LimeSeg/. 
+***Update 18 July 2020, ImageJ.net is down, you can access the old content through [Google cache](https://webcache.googleusercontent.com/search?q=cache:98Zc2DdwL3EJ:https://imagej.net/index.php%3Ftitle%3DLimeSeg%26mobileaction%3Dtoggle_view_mobile+&cd=3&hl=fr&ct=clnk&gl=ch&client=firefox-b-d) ***
 
 
 
