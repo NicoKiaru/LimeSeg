@@ -35,6 +35,7 @@ for (i=0;i<nResults;i++) {
 	zp=getResult("ZM", i);
 	setSlice(zp+1);	
 	makeOval(xp-radius,yp-radius,2*radius,2*radius);
+	Roi.setPosition(1, zp+1, 1);
 	roiManager("Add");
 }
 close();
