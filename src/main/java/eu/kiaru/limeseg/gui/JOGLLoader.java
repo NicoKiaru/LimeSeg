@@ -2,7 +2,6 @@ package eu.kiaru.limeseg.gui;
 
 import java.util.concurrent.ExecutionException;
 
-import org.mozilla.javascript.Context;
 import org.scijava.AbstractGateway;
 
 //import ij.IJ;

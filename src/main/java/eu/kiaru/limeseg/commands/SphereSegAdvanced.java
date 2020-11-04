@@ -2,6 +2,7 @@ package eu.kiaru.limeseg.commands;
 
 import java.util.ArrayList;
 
+import ij.IJ;
 import org.scijava.app.StatusService;
 import org.scijava.command.Command;
 import org.scijava.io.DefaultIOService;
@@ -116,9 +117,7 @@ public class SphereSegAdvanced implements Command {
         int NCells=0;
         ArrayList<CellT> currentlyOptimizedCellTs = new ArrayList<>();
 		
-	if (imp == null)
-        	imp = IJ.openImage();
-		
+		if (imp == null) imp = IJ.openImage(); // TODO : not sure about this
 		
         LimeSeg.currentChannel = imp.getChannel();
         if (sameCell) {

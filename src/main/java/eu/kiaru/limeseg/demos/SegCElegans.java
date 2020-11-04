@@ -1,5 +1,6 @@
 package eu.kiaru.limeseg.demos;
 
+import ij.IJ;
 import org.scijava.io.DefaultIOService;
 import org.scijava.io.IOService;
 import org.scijava.service.ServiceHelper;
@@ -13,15 +14,18 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 
 public class SegCElegans {
+
+	static ImagePlus myImpPlus;
     public static void main(final String... args) {
     	final ImageJ ij = new ImageJ();
 	    ij.ui().showUI();
-	    final ServiceHelper sh = new ServiceHelper(ij.getContext());
+	    /*final ServiceHelper sh = new ServiceHelper(ij.getContext());
         final IOService io = sh.loadService(DefaultIOService.class);
         final Dataset datasetIn = DemoHelper.getDatasetFromResources(io,"images/Dub-WilliamMohler-Tp33-Half.zip");
-        final ImageDisplay imageDisplay =
-                (ImageDisplay) ij.display().createDisplay(datasetIn);
-        ImagePlus myImpPlus = ImageJFunctions.wrap((RandomAccessibleInterval)datasetIn,"CElegans");
+        final ImageDisplay imageDisplay = (ImageDisplay) ij.display().createDisplay(datasetIn);
+        ImagePlus myImpPlus = ImageJFunctions.wrap((RandomAccessibleInterval)datasetIn,"CElegans");*/
+		myImpPlus = IJ.openImage("src/main/resources/images/Dub-WilliamMohler-Tp33-Half.zip");
+		myImpPlus.setTitle("CElegans");
 		myImpPlus.show();
         LimeSeg lms = new LimeSeg();
         lms.initialize();
@@ -60,7 +64,7 @@ public class SegCElegans {
     	LimeSeg.clearOptimizer();
     	LimeSeg.make3DViewVisible();
         final Dataset dataset = DemoHelper.getDatasetFromResources("images/Dub-WilliamMohler-Tp33-Half.zip");
-        LimeSeg.setWorkingImage((RandomAccessibleInterval) dataset, LimeSeg.currentChannel, LimeSeg.currentFrame); // Takes ages!
+        LimeSeg.setWorkingImage(myImpPlus, LimeSeg.currentChannel, LimeSeg.currentFrame); // Takes ages!
         LimeSeg.opt.setOptParam("ZScale", 7.0f/2f);
         LimeSeg.opt.setOptParam("d_0",7.0f/2f);
         LimeSeg.opt.setOptParam("normalForce",0.025f);
