@@ -1,29 +1,19 @@
 package eu.kiaru.limeseg.demos;
 
 import ij.IJ;
-import org.scijava.io.DefaultIOService;
-import org.scijava.io.IOService;
-import org.scijava.service.ServiceHelper;
 
 import eu.kiaru.limeseg.LimeSeg;
 import ij.ImagePlus;
 import net.imagej.Dataset;
 import net.imagej.ImageJ;
-import net.imagej.display.ImageDisplay;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.display.imagej.ImageJFunctions;
 
 public class SegCElegans {
 
 	static ImagePlus myImpPlus;
+
     public static void main(final String... args) {
     	final ImageJ ij = new ImageJ();
 	    ij.ui().showUI();
-	    /*final ServiceHelper sh = new ServiceHelper(ij.getContext());
-        final IOService io = sh.loadService(DefaultIOService.class);
-        final Dataset datasetIn = DemoHelper.getDatasetFromResources(io,"images/Dub-WilliamMohler-Tp33-Half.zip");
-        final ImageDisplay imageDisplay = (ImageDisplay) ij.display().createDisplay(datasetIn);
-        ImagePlus myImpPlus = ImageJFunctions.wrap((RandomAccessibleInterval)datasetIn,"CElegans");*/
 		myImpPlus = IJ.openImage("src/main/resources/images/Dub-WilliamMohler-Tp33-Half.zip");
 		myImpPlus.setTitle("CElegans");
 		myImpPlus.show();
@@ -141,7 +131,7 @@ public class SegCElegans {
 	    LimeSeg.putAllCellsTo3DDisplay();
 	    LimeSeg.opt.tic(); 									   // tip
 	    LimeSeg.runOptimisation(-1); 						   // -1 = until convergence normally 741 steps
-	    return LimeSeg.opt.toc("Durée de la segmentation : "); // top}
+		return LimeSeg.opt.toc("Durée de la segmentation : "); // top}
 	    
     }   
 }
