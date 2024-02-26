@@ -8,7 +8,7 @@
 	<parent> 
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>29.2.1</version>
+		<version>37.0.0</version>
 		<relativePath />
 	</parent>
 
@@ -73,11 +73,13 @@
 		<developerConnection>scm:git:git@github.com:nicokiaru/LimeSeg</developerConnection>
 		<tag>HEAD</tag>
 		<url>https://github.com/NicoKiaru/LimeSeg</url>
-	</scm> 
+	</scm>
+
 	<issueManagement>
 		<system>GitHub Issues</system>
 		<url>https://github.com/NicoKiaru/LimeSeg/issues</url>
 	</issueManagement>
+
 	<ciManagement>
 		<system>None</system>
 	</ciManagement>
@@ -87,6 +89,12 @@
 		<main-class>eu.kiaru.limeseg.LimeSeg</main-class>
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>Nicolas Chiaruttini</license.copyrightOwners>
+		<leastsquares.version>1.0.0</leastsquares.version>
+		<jply.version>0.2.0</jply.version>
+		<jcuda.version>0.8.0</jcuda.version>
+		<glm.version>1.0.1</glm.version>
+		<jogl-all-main.version>2.4.0-rc-20210111</jogl-all-main.version>
+		<gluegen-rt-main.version>2.4.0-rc-20210111</gluegen-rt-main.version>
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
 		<releaseProfiles>deploy-to-scijava</releaseProfiles>
@@ -116,7 +124,7 @@
 		<dependency>
 			<groupId>org.jcuda</groupId>
 			<artifactId>jcuda</artifactId>
-			<version>0.8.0</version>
+			<version>${jcuda.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.imglib2</groupId>
@@ -125,38 +133,42 @@
 		<dependency>
       		<groupId>org.jogamp.gluegen</groupId>
       		<artifactId>gluegen-rt-main</artifactId>
-			<scope>provided</scope>
+			<version>${gluegen-rt-main.version}</version> <!-- scope provided for release -->
 		</dependency>
+
     	<dependency>
       		<groupId>org.jogamp.jogl</groupId>
       		<artifactId>jogl-all-main</artifactId>
-			<scope>provided</scope>
+			<version>${jogl-all-main.version}</version> <!-- scope provided for release -->
 		</dependency>
+
     	<dependency>
     		<groupId>io.github.java-graphics</groupId>
     		<artifactId>glm</artifactId>
-    		<version>1.0.1</version>
+    		<version>${glm.version}</version>
 		</dependency>
 		<dependency>
     		<groupId>org.smurn</groupId>
     		<artifactId>jply</artifactId>
-    		<version>0.2.0</version>
+    		<version>${jply.version}</version>
 		</dependency>
 		<!-- NB: For ImageJ 1.x support. -->
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>ij</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-legacy</artifactId>
 		</dependency>
 		
-				<!-- Java 3D dependencies -->
+		<!-- Java 3D dependencies -->
 		<dependency>
 			<groupId>org.scijava</groupId>
 			<artifactId>j3dcore</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.scijava</groupId>
 			<artifactId>j3dutils</artifactId>
@@ -165,7 +177,7 @@
 		<dependency>
 			<groupId>org.orangepalantir</groupId>
 			<artifactId>leastsquares</artifactId>
-			<version>1.0.0</version>
+			<version>${leastsquares.version}</version>
 		</dependency>
 
 	</dependencies>	
